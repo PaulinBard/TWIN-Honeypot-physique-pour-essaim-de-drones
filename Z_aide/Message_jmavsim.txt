@@ -1,0 +1,117 @@
+# Jmavsim px4 data stream étude
+# doc info message: https://mavlink.io/en/messages/common.html
+
+# AU DEPART la sim envoie en permanance:
+
+SERVO_OUTPUT_RAW (36) : Superseded by ACTUATOR_OUTPUT_STATUS. The RAW values of the servo outputs (for RC input from the remote, use the RC_CHANNELS messages). The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%.
+-info sur servo moteur
+
+ATTITUDE (30) : The attitude in the aeronautical frame (right-handed, Z-down, Y-right, X-front, ZYX, intrinsic).
+-Comment il se tient / droit rouli/ tanguage tous ca
+
+ATTITUDE_QUATERNION (31) : The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right), expressed as quaternion. Quaternion order is w, x, y, z and a zero rotation would be expressed as (1 0 0 0).
+-meme chose mais exprimer diferement
+
+GLOBAL_POSITION_INT (33) : The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It is designed as scaled integer message since the resolution of float is not sufficient.
+-Position coordonnées gps 
+
+ATTITUDE_TARGET (83) : Reports the current commanded attitude of the vehicle as specified by the autopilot. This should match the commands sent in a SET_ATTITUDE_TARGET message if the vehicle is being controlled this way.
+-attitude demander par le pilote
+
+LOCAL_POSITION_NED (32) : The filtered local position (e.g. fused computer vision and accelerometers). Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
+-position local par rapport au home fixé
+
+POSITION_TARGET_LOCAL_NED (85) : Reports the current commanded vehicle position, velocity, and acceleration as specified by the autopilot. This should match the commands sent in SET_POSITION_TARGET_LOCAL_NED if the vehicle is being controlled this way.
+-position local demander par le pilote 
+
+POSITION_TARGET_GLOBAL_INT () :
+
+
+# EN PLUS APRES TAKEOFF en vol :
+
+VFR_HUD () :
+UTM_GLOBAL_POSITION () : 
+OPEN_DRONE_ID_SYSTEM () :
+SYS_STATUS () :
+SCALED_PRESSURE
+OPEN_DRONE_ID_LOCATION
+GPS_RAW_INT
+EXTENDED_SYS_STATE
+ESTIMATOR_STATUS 
+ALTITUDE
+HEARTBEAT
+HOME_POSITION
+BATTERY_STATUS
+
+# apres connection mavsdk : exemples/test-mavlink.py
+
+PING toutes les 10 sec 
+VIBRATION 
+
+# une seule fois
+COMMAND_ACK 
+520 : MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES : com= demande de msg spé / la com creer l'envoie d'un message AUTOPILOT_VERSION
+511 :MAV_CMD_SET_MESSAGE_INTERVAL : com= demande d'envoir regulier d'un message probablement PING ou VIBRATION
+400 : arm disarm
+22 : takeoff
+
+
+
+# EXEMPLES
+
+SERVO_OUTPUT_RAW {time_usec : 807540032, port : 0, servo1_raw : 900, servo2_raw : 900, servo3_raw : 900, servo4_raw : 900, servo5_raw : 900, servo6_raw : 900, servo7_raw : 900, servo8_raw : 900, servo9_raw : 900, servo10_raw : 900, servo11_raw : 900, servo12_raw : 900, servo13_raw : 900, servo14_raw : 900, servo15_raw : 900, servo16_raw : 900}
+
+ATTITUDE {time_boot_ms : 4222760416, roll : -0.0011780383065342903, pitch : -0.0019203474512323737, yaw : 0.00664304057136178, rollspeed : -0.006314883939921856, pitchspeed : -0.011946581304073334, yawspeed : 0.004552625585347414}
+
+ATTITUDE_QUATERNION {time_boot_ms : 4222760416, q1 : 0.9999938011169434, q2 : -0.0005858263466507196, q3 : -0.0009621245553717017, q4 : 0.0033209461253136396, rollspeed : -0.006314883939921856, pitchspeed : -0.011946581304073334, yawspeed : 0.004552625585347414, repr_offset_q : [0.0, 0.0, 0.0, 0.0]}
+
+GLOBAL_POSITION_INT {time_boot_ms : 4222760416, lat : 473977420, lon : 85455940, alt : 487993, relative_alt : 0, vx : 0, vy : 0, vz : 0, hdg : 38}
+
+ATTITUDE_TARGET {time_boot_ms : 4222760424, type_mask : 0, q : [0.9999943971633911, 0.0, 0.0, 0.0033402929548174143], body_roll_rate : 0.007531387265771627, body_pitch_rate : 0.013132166117429733, body_yaw_rate : -2.5112181901931763e-05, thrust : 0.0010000000474974513}
+
+LOCAL_POSITION_NED {time_boot_ms : 4222760424, x : 0.014930098317563534, y : -0.006243332289159298, z : -0.01823229156434536, vx : 0.006181180011481047, vy : 0.0006261675735004246, vz : 0.004987320862710476}
+
+POSITION_TARGET_LOCAL_NED {time_boot_ms : 4222760368, coordinate_frame : 1, type_mask : 63, x : nan, y : nan, z : nan, vx : nan, vy : nan, vz : nan, afx : 0.0, afy : 0.0, afz : 100.0, yaw : 0.006314796395599842, yaw_rate : 0.0}
+
+POSITION_TARGET_GLOBAL_INT {time_boot_ms : 4225163221, coordinate_frame : 5, type_mask : 0, lat_int : 473977418, lon_int : 85455938, alt : 490.4946594238281, vx : -0.007745531853288412, vy : -0.009000372141599655, vz : -0.0020186854526400566, afx : 0.001027264166623354, afy : -0.023442061617970467, afz : 0.007992004044353962, yaw : 0.005759831517934799, yaw_rate : -3.5032461608120427e-43}
+
+######
+
+VFR_HUD {airspeed : 0.0, groundspeed : 0.010167671367526054, heading : 0, throttle : 49, alt : 490.4944152832031, climb : -0.0005447809817269444}
+
+UTM_GLOBAL_POSITION {time : 1683557397756791, uas_id : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], lat : 473977419, lon : 85455940, alt : 490495, relative_alt : 0, vx : 0, vy : 0, vz : 0, h_acc : 2482, v_acc : 2582, vel_acc : 10, next_lat : 473977418, next_lon : 85455938, next_alt : 490495, update_rate : 0, flight_state : 3, flags : 237}
+
+OPEN_DRONE_ID_SYSTEM {target_system : 0, target_component : 0, id_or_mac : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], operator_location_type : 0, classification_type : 0, operator_latitude : 473977419, operator_longitude : 85455938, area_count : 1, area_radius : 0, area_ceiling : -1000.0, area_floor : -1000.0, category_eu : 0, class_eu : 0, operator_altitude_geo : 487.9937438964844, timestamp : 137256576}
+
+SYS_STATUS {onboard_control_sensors_present : 35684397, onboard_control_sensors_enabled : 35749933, onboard_control_sensors_health : 840990783, load : 117, voltage_battery : 15300, current_battery : -100, battery_remaining : 61, drop_rate_comm : 0, errors_comm : 0, errors_count1 : 0, errors_count2 : 0, errors_count3 : 0, errors_count4 : 0}
+
+SCALED_PRESSURE {time_boot_ms : 4225163669, press_abs : 955.7076416015625, press_diff : 0.0, temperature : 0, temperature_press_diff : 0}
+
+OPEN_DRONE_ID_LOCATION {target_system : 0, target_component : 0, id_or_mac : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], status : 2, direction : 0, speed_horizontal : 0, speed_vertical : 0, latitude : 473977419, longitude : 85455942, altitude_barometric : 490.5348205566406, altitude_geodetic : 490.49603271484375, height_reference : 0, height : 2.5006103515625, horizontal_accuracy : 12, vertical_accuracy : 6, barometer_accuracy : 1, speed_accuracy : 4, timestamp : 2976.38916015625, timestamp_accuracy : 10}
+
+GPS_RAW_INT {time_usec : 1683557376389000, fix_type : 3, lat : 473977419, lon : 85455942, alt : 490496, eph : 0, epv : 0, vel : 0, cog : 25835, satellites_visible : 10, alt_ellipsoid : 490496, h_acc : 299, v_acc : 399, vel_acc : 250, hdg_acc : 0, yaw : 0}
+
+EXTENDED_SYS_STATE {vtol_state : 0, landed_state : 2}
+
+ESTIMATOR_STATUS {time_usec : 1683557376417000, flags : 831, vel_ratio : 0.006336662918329239, pos_horiz_ratio : 0.006056491285562515, pos_vert_ratio : 0.0020101829431951046, mag_ratio : 0.016412585973739624, hagl_ratio : 0.0, tas_ratio : 0.0, pos_horiz_accuracy : 0.12113707512617111, pos_vert_accuracy : 0.12364651262760162}
+
+ALTITUDE {time_usec : 1683557897417000, altitude_monotonic : 490.5911560058594, altitude_amsl : 490.4940490722656, altitude_local : 2.45923113822937, altitude_relative : 2.500295639038086, altitude_terrain : nan, bottom_clearance : nan}
+
+HEARTBEAT {type : 2, autopilot : 12, base_mode : 157, custom_mode : 50593792, system_status : 4, mavlink_version : 3}
+
+HOME_POSITION {latitude : 473977419, longitude : 85455938, altitude : 487993, x : 0.006099273916333914, y : -0.010819006711244583, z : 0.04106453061103821, q : [0.9999945759773254, 0.0, 0.0, 0.003291927045211196], approach_x : 0.0, approach_y : 0.0, approach_z : 0.0, time_usec : 1683556464025000}
+
+BATTERY_STATUS {id : 0, battery_function : 1, type : 1, temperature : 32767, voltages : [15300, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535], current_battery : -100, current_consumed : 0, energy_consumed : -1, battery_remaining : 61, time_remaining : 0, charge_state : 1, voltages_ext : [65535, 65535, 65535, 65535], mode : 0, fault_bitmask : 0}
+
+########
+PING {time_usec : 1683558900417000, seq : 251, target_system : 0, target_component : 0}
+
+VIBRATION {time_usec : 1683558900417000, vibration_x : 9.56021303788468e-11, vibration_y : 0.008278368972241879, vibration_z : 0.0371968038380146, clipping_0 : 0, clipping_1 : 0, clipping_2 : 0}
+
+COMMAND_ACK {command : 520, result : 0, progress : 0, result_param2 : 0, target_system : 245, target_component : 190}
+
+COMMAND_ACK {command : 511, result : 0, progress : 0, result_param2 : 0, target_system : 245, target_component : 190}
+
+COMMAND_ACK {command : 400, result : 0, progress : 0, result_param2 : 0, target_system : 245, target_component : 190}
+
+COMMAND_ACK {command : 22, result : 0, progress : 0, result_param2 : 0, target_system : 245, target_component : 190}
